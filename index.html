@@ -1,0 +1,43 @@
+def reverse_and_add_to_palindrome(n: int, max_steps: int = 1000, return_path: bool = True):
+    """
+    Repeatedly reverse the digits of a number and add it to itself
+    until a palindrome is reached (or max_steps is exceeded).
+
+    Parameters
+    ----------
+    n : int
+        Starting positive integer.
+    max_steps : int
+        Safety limit to avoid infinite loops on Lychrel candidates
+        (e.g. 196). Default 1000 is usually more than enough for
+        ordinary numbers.
+    return_path : bool
+        If True, return the full sequence of numbers.
+        If False, return only the final palindrome (or None).
+
+    Returns
+    -------
+    list[int] | int | None
+        - Full path (including the starting number) if return_path=True
+          and a palindrome was found.
+        - The final palindrome if return_path=False and success.
+        - None if the limit was reached without finding a palindrome.
+    """
+    if not isinstance(n, int) or n < 0:
+        raise ValueError("n must be a non-negative integer")
+
+    path = [n]
+    current = n
+
+    for step in range(max_steps):
+        s = str(current)
+        if s == s[::-1]:                     # already a palindrome
+            return path if return_path else current
+
+        # reverse digits (Python ints handle arbitrary size)
+        reversed_num = int(s[::-1])
+        current = current + reversed_num
+        path.append(current)
+
+    # No palindrome found within the limit
+    return None
